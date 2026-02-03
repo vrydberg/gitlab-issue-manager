@@ -1,0 +1,163 @@
+#main-expanded {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 30px;
+    gap: 20px;
+}
+
+.expanded-issue {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+    background-color: #424242 ;
+    color: white;
+}
+
+.expanded-issue-top {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 14px;
+}
+
+.expanded-issue-bottom {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 14px;
+}
+
+.expanded-issue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.expanded-btns-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.expanded-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+}
+
+.expanded-btn-img {
+    width: 18px;
+    height: 18px;
+}
+
+.update-status-btn {
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+}
+
+.close-issue-btn {
+    /* background-color: #D32F2F; */
+    background-color: #1F75CB;
+}
+
+.reopen-issue-btn {
+    background-color: #009967;
+}
+
+.issue-info {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.issue-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 58px;
+    border-radius: 16px;    
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.status-open {
+    background-color: #009967;
+}
+
+.status-closed {
+    /* background-color: #D32F2F; */
+    background-color: #1F75CB;
+}
+
+.comments-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 4px;
+    padding: 14px;
+    border-radius: 8px;
+    border-top: 3px solid #FF7143;
+    background-color: #dfdfdf;
+    color: #424242;
+}
+
+.comment-user {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comment-form-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.comment-form-textarea {
+    display: flex;
+    flex: 2;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 4px;
+
+}
+.comment-form-btn-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-btn {
+    box-sizing: border-box;
+    padding: 8px;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+}

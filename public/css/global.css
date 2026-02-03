@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: "Karla", sans-serif;
+    background-color: #F5F5F5;
+    color: #424242;
+}
+
+main {
+    flex: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.base-btn {
+    background-color: #FF7143;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    border: none;
+}
+
+a {
+    transition: all 0.5s ease;
+}
+
+.base-btn:hover {
+    background-color: #DB4228;
+}
+
+
+.header {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 15px;
+    font-size: 16px;
+    background-color: #424242 ;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px
+}
+
+.header-anchor {
+    color: white;
+    padding: 6px 8px 6px 8px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.header-anchor:hover {
+    background-color: #FF7143;
+}
+
+.header-anchor:active {
+    background-color: #1a252f;
+}
+
+
+.header-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    box-sizing: border-box;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}

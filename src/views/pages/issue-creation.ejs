@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    
+    <%- include('../partials/auth-header') -%>
+
+    <main id="main-creation">
+
+        <div class="create-container">
+
+            <h2>Create New Issue</h2>
+
+            <form class="create-issue-form" method="POST" action="/issues/create">
+              <div class="form-row">
+                <label for="issue-title">Title</label>
+                <input type="text" class="create-issue-title" name="title" required placeholder="Enter issue title" />
+              </div>
+          
+              <div class="form-row">
+                <label for="issue-description">Description</label>
+                <textarea class="create-issue-description" name="description" rows="5" required placeholder="Provide a description of the issue"></textarea>
+              </div>
+          
+              <div class="create-issue-btn-container">
+                <button type="submit" class="base-btn create-issue-btn">Create Issue</button>
+              </div>
+            </form>
+        </div>
+
+        
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+    
+</body>
+</html>

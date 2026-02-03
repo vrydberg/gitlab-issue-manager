@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    
+    <%- include('../partials/auth-header') -%>
+
+    <main id="main-expanded">
+
+        <div class="expanded-header">
+            <h2>Issues Explorer View</h2>
+
+            
+        </div>
+
+        <% if (issue) { %>
+            <div class="expanded-issue">
+                
+                <div class="expanded-issue-top">
+                    <div class="expanded-issue-header">
+                        <h2 class="issue-title"><%= issue.title %></h2>
+                        <div class="expanded-btns-container">
+
+                            <% if (issue.state === 'opened') { %>
+                                <form class="update-status-form" action="/issues/update-issue-status/<%= issue.iid %>" method="POST">
+                                    <input type="hidden" name="state_event" value="close">
+                                    <button type="submit" class="update-status-btn close-issue-btn">Close issue</button>
+                                </form>
+                            <% } else { %>
+                                <form class="update-status-form" action="/issues/update-issue-status/<%= issue.iid %>" method="POST">
+                                    <input type="hidden" name="state_event" value="reopen">
+                                    <button type="submit" class="update-status-btn reopen-issue-btn">Reopen issue</button>
+                                </form>
+
+                            <% } %>
+
+                            <a href="" class="base-btn expanded-btn">
+                                <img class="expanded-btn-img" src="/images/issue-edit-48.png" alt="Issue Edit Button">
+                            </a>
+            
+                        </div>
+                    </div>
+                    
+                    
+                    <p><%= issue.description %></p>
+                    <div class="issue-info">
+                        <% if (issue.state === 'opened') { %>
+                            <p class="issue-status status-open">Open</p>
+                        <% } else { %>
+                            <p class="issue-status status-closed">Closed</p>
+                        <% } %>
+            
+                        <p class="issue-info">Issue created on <span class="issue-date"><%= issue.created_at %></span> by <span class="issue-user"><%= issue.author.username %></span></p>
+                    </div>
+                </div>
+
+                <div class="expanded-issue-bottom">
+                    <h3 class="issue-title">Comments</h2>
+
+                    
+                    <div class="comments-container">
+                        <% if (comments.length > 0) { %>
+
+                            <% for (let i = 0; i < comments.length; i++) { %>
+
+                                <div class="comment">
+                                    <p class="comment-user"><%= comments[i].author.username %>, <%= comments[i].created_at %></p>
+                                    <p class="comment-text"><%= comments[i].body %></p>
+                                </div>
+                            <% } %>
+
+                            
+
+            
+                        <% } else { %>
+
+                            <!-- <p>No comments yet</p> -->
+
+                        <% } %>
+                    </div>
+
+                    <form action="/issues/add-comment/<%= issue.iid %>" method="POST" class="comment-form">                    
+                        <div class="comment-form-input-container">
+                            <textarea class="comment-form-textarea" id="new-comment" name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+                            
+                            <div class="comment-form-btn-container">
+                                <button type="submit" class="base-btn comment-btn">Submit Comment</button>
+                            </div>
+                        </div>
+                        
+            
+                        </div>
+                        
+                    </form>
+
+                </div>
+
+            </div>
+        <% } else { %>
+            <div>An error occured. The fetched issue does not have a valid id.</div>
+        <% } %>
+
+        
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+</body>
+</html>

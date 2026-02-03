@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    
+    <%- include('../partials/auth-header') -%>
+
+    <main id="main-explorer">
+
+        <div class="explorer-header">
+            <h2>Issues Explorer View</h2>
+        </div>
+
+        <div class="issue-list">
+            <% if (issues.length > 0) { %>
+                <% for (let i = 0; i < issues.length; i++) { %>
+                    <div class="issue">
+                        <div class="issue-left">
+                            <% if (issues[i].state === 'opened') { %>
+                                <p class="issue-status status-open">Open</p>
+                            <% } else { %>
+                                <p class="issue-status status-closed">Closed</p>
+                            <% } %>
+                            <h4 class="issue-title"><%= issues[i].title %></h4>
+                            <div class="issue-comment-container">
+                                <img class="issue-comment-icon" src="/images/comments-icon-96.png" alt="">
+                                
+                            </div>
+                        </div>
+        
+                        <div class="issue-right">
+                            <p class="issue-info">Issue created on <span class="issue-date"><%= issues[i].created_at %></span> by <span class="issue-user"><%= issues[i].author.username %></span></p>
+                            <div class="issue-btns-container">
+                                <a href="/issues/expanded/<%= issues[i].iid %>" class="base-btn issue-btn">
+                                    <img class="issue-btn-img" src="/images/issue-expand-48.png" alt="Issue Edit Button">
+                                </a>
+            
+                                <a href="/issues/edit/<%= issues[i].iid %>" class="base-btn issue-btn">
+                                    <img class="issue-btn-img" src="/images/issue-edit-48.png" alt="Issue Edit Button">
+                                </a>
+            
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+    
+            <% } else { %>
+                <div class="">Test</div>
+            <% } %>
+        
+        </div>
+        
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+    
+</body>
+</html>
