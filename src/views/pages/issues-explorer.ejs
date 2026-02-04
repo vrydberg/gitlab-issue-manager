@@ -3,58 +3,207 @@
 <head>
     <%- include('../partials/head'); %>
 </head>
-<body>
-    
+<body class="has-timeline">
+
     <%- include('../partials/auth-header') -%>
 
     <main id="main-explorer">
 
-        <div class="explorer-header">
-            <h2>Issues Explorer View</h2>
-        </div>
+        <header class="explorer-header">
+            <div class="explorer-header-content">
+                <h1 class="explorer-title">Issues</h1>
+                <span class="explorer-count"><%= pagination ? pagination.total : issues.length %></span>
+            </div>
+            <div class="explorer-meta">
+                <span class="explorer-updated">Last synced just now</span>
+            </div>
+        </header>
 
-        <div class="issue-list">
-            <% if (issues.length > 0) { %>
-                <% for (let i = 0; i < issues.length; i++) { %>
-                    <div class="issue">
-                        <div class="issue-left">
-                            <% if (issues[i].state === 'opened') { %>
-                                <p class="issue-status status-open">Open</p>
-                            <% } else { %>
-                                <p class="issue-status status-closed">Closed</p>
-                            <% } %>
-                            <h4 class="issue-title"><%= issues[i].title %></h4>
-                            <div class="issue-comment-container">
-                                <img class="issue-comment-icon" src="/images/comments-icon-96.png" alt="">
-                                
+        <div class="issue-list-container">
+            <%
+                // Helper to build sort URL
+                const getSortUrl = (column) => {
+                    const newSort = (sorting.orderBy === column && sorting.sort === 'desc') ? 'asc' : 'desc';
+                    const params = new URLSearchParams();
+                    params.set('order_by', column);
+                    params.set('sort', newSort);
+                    params.set('page', '1');
+                    params.set('per_page', pagination.perPage.toString());
+                    if (typeof mock !== 'undefined') params.set('mock', 'true');
+                    return '/issues/?' + params.toString();
+                };
+
+                const getSortIndicator = (column) => {
+                    if (sorting.orderBy !== column) return '';
+                    return sorting.sort === 'asc' ? 'sort-asc' : 'sort-desc';
+                };
+            %>
+            <div class="issue-list-header">
+                <span class="col-status">Status</span>
+                <a href="<%= getSortUrl('title') %>" class="col-issue sortable <%= getSortIndicator('title') %>">
+                    Issue
+                    <span class="sort-arrow"></span>
+                </a>
+                <a href="<%= getSortUrl('created_at') %>" class="col-created sortable <%= getSortIndicator('created_at') %>">
+                    Created
+                    <span class="sort-arrow"></span>
+                </a>
+                <span class="col-comments">Comments</span>
+                <a href="<%= getSortUrl('updated_at') %>" class="col-updated sortable <%= getSortIndicator('updated_at') %>">
+                    Updated
+                    <span class="sort-arrow"></span>
+                </a>
+                <span class="col-actions">Actions</span>
+            </div>
+
+            <div class="issue-list">
+                <% if (issues.length > 0) { %>
+                    <% for (let i = 0; i < issues.length; i++) { %>
+                        <article class="issue" data-iid="<%= issues[i].iid %>">
+                            <div class="issue-status-cell">
+                                <% if (issues[i].state === 'opened') { %>
+                                    <span class="issue-status status-open">
+                                        <span class="status-dot"></span>
+                                        Open
+                                    </span>
+                                <% } else { %>
+                                    <span class="issue-status status-closed">
+                                        <span class="status-dot"></span>
+                                        Closed
+                                    </span>
+                                <% } %>
                             </div>
-                        </div>
-        
-                        <div class="issue-right">
-                            <p class="issue-info">Issue created on <span class="issue-date"><%= issues[i].created_at %></span> by <span class="issue-user"><%= issues[i].author.username %></span></p>
-                            <div class="issue-btns-container">
-                                <a href="/issues/expanded/<%= issues[i].iid %>" class="base-btn issue-btn">
-                                    <img class="issue-btn-img" src="/images/issue-expand-48.png" alt="Issue Edit Button">
-                                </a>
-            
-                                <a href="/issues/edit/<%= issues[i].iid %>" class="base-btn issue-btn">
-                                    <img class="issue-btn-img" src="/images/issue-edit-48.png" alt="Issue Edit Button">
-                                </a>
-            
+
+                            <div class="issue-main">
+                                <div class="issue-title-row">
+                                    <h3 class="issue-title"><%= issues[i].title %></h3>
+                                    <div class="issue-id">#<%= issues[i].iid %></div>
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="issue-created">
+                                <span class="author-avatar"><%= issues[i].author.username.charAt(0).toUpperCase() %></span>
+                                <div class="created-details">
+                                    <span class="created-author"><%= issues[i].author.username %></span>
+                                    <time class="created-date"><%= issues[i].created_at %></time>
+                                </div>
+                            </div>
+
+                            <div class="issue-comments">
+                                <span class="comment-count <%= (issues[i].user_notes_count || 0) === 0 ? 'muted' : '' %>">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                        <path d="M2 3h12v8H4l-2 2V3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <%= issues[i].user_notes_count || 0 %>
+                                </span>
+                            </div>
+
+                            <div class="issue-updated">
+                                <time class="updated-date"><%= issues[i].updated_at_formatted %></time>
+                            </div>
+
+                            <div class="issue-actions">
+                                <a href="/issues/expanded/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
+                                   class="action-btn action-view"
+                                   title="View details"
+                                   aria-label="View issue details">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                        <path d="M8 3C4.5 3 1.5 6 1 8c.5 2 3.5 5 7 5s6.5-3 7-5c-.5-2-3.5-5-7-5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </a>
+                                <a href="/issues/edit/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
+                                   class="action-btn action-edit"
+                                   title="Edit issue"
+                                   aria-label="Edit issue">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                        <path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M10 4l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </article>
+                    <% } %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                            <rect x="8" y="12" width="32" height="24" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M16 20h16M16 26h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <p>No issues found</p>
                     </div>
                 <% } %>
-    
-            <% } else { %>
-                <div class="">Test</div>
+            </div>
+
+            <% if (pagination && pagination.totalPages > 0) { %>
+                <div class="pagination-footer">
+                    <div class="pagination-info">
+                        <%
+                            const start = (pagination.page - 1) * pagination.perPage + 1;
+                            const end = Math.min(pagination.page * pagination.perPage, pagination.total);
+                        %>
+                        Showing <%= start %>-<%= end %> of <%= pagination.total %>
+                    </div>
+                    <div class="pagination-controls">
+                        <% if (pagination.page > 1) { %>
+                            <a href="<%= buildUrl(pagination.page - 1) %>" class="pagination-btn">Previous</a>
+                        <% } else { %>
+                            <span class="pagination-btn disabled">Previous</span>
+                        <% } %>
+
+                        <span class="pagination-pages">
+                            Page <%= pagination.page %> of <%= pagination.totalPages %>
+                        </span>
+
+                        <% if (pagination.page < pagination.totalPages) { %>
+                            <a href="<%= buildUrl(pagination.page + 1) %>" class="pagination-btn">Next</a>
+                        <% } else { %>
+                            <span class="pagination-btn disabled">Next</span>
+                        <% } %>
+                    </div>
+                    <div class="per-page-selector">
+                        <label for="per-page">Per page:</label>
+                        <select id="per-page" onchange="updatePerPage(this.value)">
+                            <option value="10" <%= pagination.perPage === 10 ? 'selected' : '' %>>10</option>
+                            <option value="20" <%= pagination.perPage === 20 ? 'selected' : '' %>>20</option>
+                            <option value="50" <%= pagination.perPage === 50 ? 'selected' : '' %>>50</option>
+                            <option value="100" <%= pagination.perPage === 100 ? 'selected' : '' %>>100</option>
+                        </select>
+                    </div>
+                </div>
             <% } %>
-        
         </div>
-        
+
     </main>
+
+    
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/client.js"></script>
-    
+    <script>
+        // Store current sorting/pagination state for client-side use
+        window.explorerState = {
+            orderBy: '<%= sorting.orderBy %>',
+            sort: '<%= sorting.sort %>',
+            page: <%= pagination.page %>,
+            perPage: <%= pagination.perPage %>,
+            mock: <%= typeof mock !== 'undefined' ? 'true' : 'false' %>
+        };
+    </script>
+
 </body>
 </html>
+<%
+// Helper function to determine text color based on background
+function getLabelTextColor(bgColor) {
+    // Handle hex colors
+    if (!bgColor || bgColor === '#') return '#fff';
+    const hex = bgColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    // Use luminance formula to determine if text should be light or dark
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#1a1a1a' : '#ffffff';
+}
+%>
