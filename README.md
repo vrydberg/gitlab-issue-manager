@@ -1,6 +1,6 @@
 # GitLab Issue Manager
 
-[![CI](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml)
+<!-- [![CI](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml) -->
 
 A real-time issue management dashboard for GitLab. Connects to a GitLab repository via OAuth2 and provides live updates through WebSocket integration — when issues are created, updated, or commented on in GitLab, the dashboard reflects changes instantly without page refresh.
 
