@@ -213,17 +213,15 @@ function createExplorerIssueHTML (issue) {
   const actionsCell = document.createElement('div')
   actionsCell.className = 'issue-actions'
 
-  const mockParam = window.explorerState?.mock ? '?mock=true' : ''
-
   const viewLink = document.createElement('a')
-  viewLink.href = `/issues/expanded/${encodeURIComponent(issue.iid)}${mockParam}`
+  viewLink.href = `/issues/expanded/${encodeURIComponent(issue.iid)}`
   viewLink.className = 'action-btn action-view'
   viewLink.title = 'View details'
   viewLink.setAttribute('aria-label', 'View issue details')
   viewLink.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3C4.5 3 1.5 6 1 8c.5 2 3.5 5 7 5s6.5-3 7-5c-.5-2-3.5-5-7-5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>'
 
   const editLink = document.createElement('a')
-  editLink.href = `/issues/edit/${encodeURIComponent(issue.iid)}${mockParam}`
+  editLink.href = `/issues/edit/${encodeURIComponent(issue.iid)}`
   editLink.className = 'action-btn action-edit'
   editLink.title = 'Edit issue'
   editLink.setAttribute('aria-label', 'Edit issue')
@@ -254,7 +252,6 @@ function updatePerPage (value) {
   params.set('page', '1')
   params.set('per_page', value)
   if (es.state && es.state !== 'all') params.set('state', es.state)
-  if (es.mock) params.set('mock', 'true')
   window.location.href = `/issues/?${params.toString()}`
 }
 
@@ -268,7 +265,6 @@ document.querySelectorAll('input[name="status-filter"]').forEach(radio => {
     params.set('page', '1')
     params.set('per_page', es.perPage || '20')
     if (radio.value !== 'all') params.set('state', radio.value)
-    if (es.mock) params.set('mock', 'true')
     window.location.href = `/issues/?${params.toString()}`
   })
 })

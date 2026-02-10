@@ -39,52 +39,7 @@ const fetchExplorerIssues = async (req, res, next) => {
       params.set('page', newPage.toString())
       params.set('per_page', perPage.toString())
       if (state !== 'all') params.set('state', state)
-      if (req.query.mock === 'true') params.set('mock', 'true')
       return `/issues/?${params.toString()}`
-    }
-
-    // Use mock data if ?mock=true query parameter is present
-    if (req.query.mock === 'true') {
-      // Apply state filter to mock data
-      const filteredIssues = state === 'all'
-        ? [...mockIssues]
-        : mockIssues.filter(i => i.state === state)
-
-      // Apply sorting to mock data
-      const sortedIssues = filteredIssues.sort((a, b) => {
-        let aVal, bVal
-        if (orderBy === 'title') {
-          aVal = a.title.toLowerCase()
-          bVal = b.title.toLowerCase()
-        } else {
-          aVal = new Date(a[orderBy])
-          bVal = new Date(b[orderBy])
-        }
-        if (sort === 'asc') return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
-        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
-      })
-
-      // Apply pagination to mock data
-      const total = sortedIssues.length
-      const totalPages = Math.ceil(total / perPage)
-      const start = (page - 1) * perPage
-      const paginatedIssues = sortedIssues.slice(start, start + perPage)
-
-      // Format dates
-      paginatedIssues.forEach(i => {
-        i.created_at_formatted = formatDate(i.created_at)
-        i.updated_at_formatted = formatDate(i.updated_at)
-      })
-
-      return res.render('pages/issues-explorer', {
-        css: '/css/issues-explorer.css',
-        issues: paginatedIssues,
-        mock: true,
-        pagination: { page, perPage, total, totalPages },
-        sorting: { orderBy, sort },
-        activeFilter: state,
-        buildUrl
-      })
     }
 
     const { issues, pagination } = await gitlabApi.getIssues({ state: state !== 'all' ? state : undefined, orderBy, sort, page, perPage })
@@ -115,18 +70,6 @@ const fetchExplorerIssues = async (req, res, next) => {
 const expandIssue = async (req, res, next) => {
   try {
     const iid = req.params.iid
-
-    // Use mock data if ?mock=true query parameter is present
-    if (req.query.mock === 'true') {
-      const issue = mockIssues.find(i => i.iid === parseInt(iid))
-      const comments = mockComments[iid] || []
-      return res.render('pages/expanded-issue', {
-        css: '/css/expanded-issue.css',
-        issue: issue || null,
-        comments: comments,
-        mock: true
-      })
-    }
 
     const issue = await gitlabApi.getIssue(iid)
 
@@ -180,7 +123,6 @@ const addIssueComment = async (req, res, next) => {
 const renderIssueCreation = async (req, res, _next) => {
   res.render('pages/issue-creation', {
     css: '/css/issue-creation.css',
-    mock: req.query.mock === 'true' ? true : undefined
   })
 }
 

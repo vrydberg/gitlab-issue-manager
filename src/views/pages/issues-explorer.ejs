@@ -33,7 +33,6 @@
                     params.set('page', '1');
                     params.set('per_page', pagination.perPage.toString());
                     if (typeof activeFilter !== 'undefined' && activeFilter !== 'all') params.set('state', activeFilter);
-                    if (typeof mock !== 'undefined') params.set('mock', 'true');
                     return '/issues/?' + params.toString();
                 };
 
@@ -107,7 +106,7 @@
                             </div>
 
                             <div class="issue-actions">
-                                <a href="/issues/expanded/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
+                                <a href="/issues/expanded/<%= issues[i].iid %>"
                                    class="c-btn c-btn--icon"
                                    title="View details"
                                    aria-label="View issue details">
@@ -116,7 +115,7 @@
                                         <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
                                     </svg>
                                 </a>
-                                <a href="/issues/edit/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
+                                <a href="/issues/edit/<%= issues[i].iid %>"
                                    class="c-btn c-btn--icon"
                                    title="Edit issue"
                                    aria-label="Edit issue">
@@ -192,7 +191,6 @@
             page: <%= pagination.page %>,
             perPage: <%= pagination.perPage %>,
             state: '<%= typeof activeFilter !== "undefined" ? activeFilter : "all" %>',
-            mock: <%= typeof mock !== 'undefined' ? 'true' : 'false' %>
         };
     </script>
 
