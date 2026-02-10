@@ -1,0 +1,91 @@
+<aside class="sidebar">
+    <!-- Main Content Area -->
+    <div class="sidebar-content">
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <h3 class="sidebar-section-title">Navigation</h3>
+            <a href="/issues" class="sidebar-nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'explorer' ? 'active' : '' %>">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="/issues/create" class="sidebar-nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'create' ? 'active' : '' %>">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Create Issue</span>
+            </a>
+
+            <a href="/issues/repository" class="sidebar-nav-item <%= typeof currentPage !== 'undefined' && currentPage === 'repository' ? 'active' : '' %>">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M2 4.5C2 3.67 2.67 3 3.5 3h9c.83 0 1.5.67 1.5 1.5v7c0 .83-.67 1.5-1.5 1.5h-9C2.67 13 2 12.33 2 11.5v-7z" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 6h6M5 8.5h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Repository</span>
+            </a>
+        </nav>
+
+        <% if (typeof sidebarContext !== 'undefined' && sidebarContext === 'explorer') { %>
+        <!-- Divider -->
+        <div class="sidebar-divider"></div>
+
+        <!-- Quick Filters -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-section-title">Quick Filters</h3>
+            <div class="sidebar-filters">
+                <label class="sidebar-filter">
+                    <input type="radio" name="status-filter" value="all" <%= typeof activeFilter === 'undefined' || activeFilter === 'all' ? 'checked' : '' %>>
+                    <span class="sidebar-filter-radio"></span>
+                    <span class="sidebar-filter-label">All issues</span>
+                </label>
+                <label class="sidebar-filter">
+                    <input type="radio" name="status-filter" value="opened" <%= typeof activeFilter !== 'undefined' && activeFilter === 'opened' ? 'checked' : '' %>>
+                    <span class="sidebar-filter-radio"></span>
+                    <span class="sidebar-filter-label">Open</span>
+                </label>
+                <label class="sidebar-filter">
+                    <input type="radio" name="status-filter" value="closed" <%= typeof activeFilter !== 'undefined' && activeFilter === 'closed' ? 'checked' : '' %>>
+                    <span class="sidebar-filter-radio"></span>
+                    <span class="sidebar-filter-label">Closed</span>
+                </label>
+            </div>
+        </div>
+
+        <% } %>
+
+        <!-- Spacer to push user section to bottom -->
+        <div class="sidebar-spacer"></div>
+
+        <!-- User Section -->
+        <div class="sidebar-user">
+            <div class="sidebar-user-info">
+                <span class="sidebar-user-avatar">
+                    <%= user && user.username ? user.username.charAt(0).toUpperCase() : 'U' %>
+                </span>
+                <span class="sidebar-user-name"><%= user && user.username ? user.username : 'User' %></span>
+            </div>
+            <button class="sidebar-settings-btn" aria-label="Settings" disabled title="Settings coming soon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- GitLab Attribution -->
+        <a href="https://docs.gitlab.com/api/" target="_blank" rel="noopener noreferrer" class="gitlab-credit gitlab-credit--sidebar">
+            <svg width="16" height="16" viewBox="0 0 380 380" fill="none" aria-hidden="true">
+                <path d="M282.83 170.73l-.27-.69-26.14-68.22a6.81 6.81 0 00-2.69-3.24 7 7 0 00-8 .43 7 7 0 00-2.32 3.52l-17.65 54h-71.47l-17.65-54a6.86 6.86 0 00-2.32-3.53 7 7 0 00-8-.43 6.87 6.87 0 00-2.69 3.24L97.44 170l-.26.69a48.54 48.54 0 0016.1 56.1l.09.07.24.17 39.82 29.82 19.7 14.91 12 9.06a8.07 8.07 0 009.76 0l12-9.06 19.7-14.91 40.06-30 .1-.08a48.56 48.56 0 0016.08-56.04z" fill="#E24329"/>
+                <path d="M282.83 170.73l-.27-.69a88.3 88.3 0 00-35.15 15.8L190 229.25c19.55 14.79 36.57 27.64 36.57 27.64l40.06-30 .1-.08a48.56 48.56 0 0016.1-56.08z" fill="#FC6D26"/>
+                <path d="M153.43 256.89l19.7 14.91 12 9.06a8.07 8.07 0 009.76 0l12-9.06 19.7-14.91s-17.02-12.85-36.57-27.64c-19.55 14.79-36.59 27.64-36.59 27.64z" fill="#FCA326"/>
+                <path d="M132.58 185.84A88.19 88.19 0 0097.44 170l-.26.69a48.54 48.54 0 0016.1 56.1l.09.07.24.17 39.82 29.82L190 229.25l-57.42-43.41z" fill="#FC6D26"/>
+            </svg>
+            <span>Powered by GitLab API</span>
+        </a>
+    </div>
+</aside>
