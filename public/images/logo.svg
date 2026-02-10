@@ -1,0 +1,13 @@
+<svg width="48" height="56" viewBox="8 4 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon -->
+  <path d="M32 4L56 18V46L32 60L8 46V18L32 4Z" fill="#FF7143"/>
+  <!-- Timeline -->
+  <line x1="22" y1="26" x2="22" y2="40" stroke="white" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>
+  <!-- Item 1 - completed -->
+  <rect x="17" y="22" width="10" height="10" rx="2" fill="white"/>
+  <path d="M19 27L21 29L26 24" stroke="#FF7143" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30" y="24" width="12" height="6" rx="3" fill="white"/>
+  <!-- Item 2 - pending -->
+  <rect x="18" y="36" width="8" height="8" rx="2" fill="white" fill-opacity="0.5"/>
+  <rect x="30" y="37" width="9" height="5" rx="2" fill="white" fill-opacity="0.45"/>
+</svg>
