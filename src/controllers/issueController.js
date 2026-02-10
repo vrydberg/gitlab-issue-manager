@@ -122,7 +122,7 @@ const addIssueComment = async (req, res, next) => {
 // Renders the issue creation webpage
 const renderIssueCreation = async (req, res, _next) => {
   res.render('pages/issue-creation', {
-    css: '/css/issue-creation.css',
+    css: '/css/issue-creation.css'
   })
 }
 

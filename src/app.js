@@ -54,7 +54,7 @@ app.get('/gitlab', passport.authenticate('gitlab', {
 
 // GitLab OAuth callback handler to determine whether user authenticated themselves
 app.get('/gitlab/callback', (req, res, next) => {
-  passport.authenticate('gitlab', { keepSessionInfo: true }, (err, user, info) => {
+  passport.authenticate('gitlab', { keepSessionInfo: true }, (err, user, _info) => {
     if (err) return next(err)
     if (!user) return res.redirect('/')
     req.logIn(user, { keepSessionInfo: true }, (loginErr) => {

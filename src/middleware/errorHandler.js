@@ -41,6 +41,6 @@ export const errorHandler = (err, req, res, _next) => {
   res.status(statusCode).render('pages/error', {
     css: '/css/error.css',
     statusCode,
-    message,
+    message
   })
 }

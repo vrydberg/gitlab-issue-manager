@@ -9,6 +9,7 @@ module.exports = {
     'build/**/*.css',
     'dist/**/*.css',
     'doc/**/*.css',
-    'node_modules/**/*.css'
+    'node_modules/**/*.css',
+    'coverage/**/*.css'
   ]
 }
