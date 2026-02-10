@@ -1,31 +1,10 @@
-/* Expanded Issue - Minimal & Technical */
-
 /* ============================================
-   Main Container & CSS Custom Properties
+   Main Container
    ============================================ */
 #main-expanded {
-    /* Inherit explorer design language */
-    --expanded-bg: #fafafa;
-    --expanded-surface: #ffffff;
-    --expanded-border: #e5e5e5;
-    --expanded-border-subtle: #f0f0f0;
-    --expanded-text: #424242;
-    --expanded-text-secondary: #666666;
-    --expanded-text-muted: #999999;
-    --expanded-accent: #FF7143;
-    --expanded-accent-hover: #DB4228;
-    --expanded-accent-subtle: rgba(255, 113, 67, 0.08);
-    --expanded-open: #1a7f4b;
-    --expanded-open-bg: #e8f5ec;
-    --expanded-closed: #5a6570;
-    --expanded-closed-bg: #f0f1f3;
-    --expanded-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --expanded-radius: 4px;
-    --expanded-transition: 150ms ease;
-
-    /* Layout */
     display: flex;
     flex-direction: column;
+    width: 100%;
     max-width: 900px;
     margin: 0 auto;
     padding: 32px 24px;
@@ -41,7 +20,7 @@
     align-items: center;
     margin-bottom: 24px;
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--expanded-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .expanded-header h2 {
@@ -49,7 +28,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--expanded-text-muted);
+    color: var(--color-text-muted);
 }
 
 /* Back Link / Breadcrumb */
@@ -59,13 +38,13 @@
     gap: 6px;
     font-size: 13px;
     font-weight: 500;
-    color: var(--expanded-text-secondary);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color var(--expanded-transition);
+    transition: color var(--transition-fast);
 }
 
 .back-link:hover {
-    color: var(--expanded-accent);
+    color: var(--color-accent);
 }
 
 .back-link svg {
@@ -73,7 +52,7 @@
 }
 
 .header-separator {
-    color: var(--expanded-border);
+    color: var(--color-border);
     margin: 0 8px;
     font-size: 14px;
 }
@@ -84,10 +63,10 @@
 .expanded-issue {
     display: flex;
     flex-direction: column;
-    background: var(--expanded-surface);
-    border: 1px solid var(--expanded-border);
-    border-radius: var(--expanded-radius);
-    box-shadow: var(--expanded-shadow);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
@@ -99,7 +78,7 @@
     flex-direction: column;
     padding: 24px;
     gap: 20px;
-    border-bottom: 1px solid var(--expanded-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .expanded-issue-header {
@@ -112,7 +91,7 @@
 .expanded-issue-header .issue-title {
     font-size: 22px;
     font-weight: 600;
-    color: var(--expanded-text);
+    color: var(--color-text-primary);
     letter-spacing: -0.01em;
     line-height: 1.3;
     flex: 1;
@@ -140,34 +119,34 @@
     font-weight: 600;
     font-family: inherit;
     border: 1px solid transparent;
-    border-radius: var(--expanded-radius);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition:
-        background-color var(--expanded-transition),
-        border-color var(--expanded-transition),
-        color var(--expanded-transition);
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
 }
 
 .close-issue-btn {
-    background: var(--expanded-closed-bg);
-    color: var(--expanded-closed);
+    background: var(--color-status-closed-bg);
+    color: var(--color-status-closed);
     border-color: transparent;
 }
 
 .close-issue-btn:hover {
-    background: var(--expanded-closed);
-    color: white;
+    background: var(--color-status-closed);
+    color: var(--color-text-inverse);
 }
 
 .reopen-issue-btn {
-    background: var(--expanded-open-bg);
-    color: var(--expanded-open);
+    background: var(--color-status-open-bg);
+    color: var(--color-status-open);
     border-color: transparent;
 }
 
 .reopen-issue-btn:hover {
-    background: var(--expanded-open);
-    color: white;
+    background: var(--color-status-open);
+    color: var(--color-text-inverse);
 }
 
 /* Edit Button */
@@ -177,25 +156,25 @@
     justify-content: center;
     width: 34px;
     height: 34px;
-    border-radius: var(--expanded-radius);
+    border-radius: var(--radius-sm);
     background: transparent;
-    border: 1px solid var(--expanded-border);
+    border: 1px solid var(--color-border);
     cursor: pointer;
     transition:
-        background-color var(--expanded-transition),
-        border-color var(--expanded-transition);
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
 .expanded-btn:hover {
-    background: var(--expanded-border-subtle);
-    border-color: var(--expanded-text-muted);
+    background: var(--color-border-subtle);
+    border-color: var(--color-text-muted);
 }
 
 .expanded-btn-img {
     width: 16px;
     height: 16px;
     opacity: 0.6;
-    transition: opacity var(--expanded-transition);
+    transition: opacity var(--transition-fast);
 }
 
 .expanded-btn:hover .expanded-btn-img {
@@ -206,7 +185,7 @@
 .expanded-issue-top > p {
     font-size: 15px;
     line-height: 1.7;
-    color: var(--expanded-text-secondary);
+    color: var(--color-text-secondary);
     white-space: pre-wrap;
 }
 
@@ -216,60 +195,25 @@
     align-items: center;
     gap: 12px;
     padding-top: 16px;
-    border-top: 1px solid var(--expanded-border-subtle);
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .issue-info p.issue-info {
     font-size: 13px;
-    color: var(--expanded-text-muted);
+    color: var(--color-text-muted);
     border: none;
     padding: 0;
 }
 
 .issue-date {
     font-weight: 500;
-    color: var(--expanded-text-secondary);
+    color: var(--color-text-secondary);
     font-variant-numeric: tabular-nums;
 }
 
 .issue-user {
     font-weight: 600;
-    color: var(--expanded-accent);
-}
-
-/* Status Badge */
-.issue-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 12px;
-}
-
-.status-open {
-    color: var(--expanded-open);
-    background: var(--expanded-open-bg);
-}
-
-.status-closed {
-    color: var(--expanded-closed);
-    background: var(--expanded-closed-bg);
-}
-
-.status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-}
-
-.status-open .status-dot {
-    background: var(--expanded-open);
-}
-
-.status-closed .status-dot {
-    background: var(--expanded-closed);
+    color: var(--color-accent);
 }
 
 /* ============================================
@@ -280,7 +224,7 @@
     flex-direction: column;
     padding: 24px;
     gap: 20px;
-    background: var(--expanded-border-subtle);
+    background: var(--color-border-subtle);
 }
 
 .expanded-issue-bottom .issue-title {
@@ -288,7 +232,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--expanded-text-muted);
+    color: var(--color-text-muted);
     margin-bottom: 4px;
 }
 
@@ -305,13 +249,14 @@
     flex-direction: column;
     gap: 8px;
     padding: 16px;
-    background: var(--expanded-surface);
-    border: 1px solid var(--expanded-border);
-    border-radius: var(--expanded-radius);
-    border-left: 3px solid var(--expanded-accent);
-    transition: box-shadow var(--expanded-transition);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-accent);
+    transition: box-shadow var(--transition-fast);
 }
 
+/* Can potentially remove */
 .comment:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
@@ -322,7 +267,7 @@
     gap: 8px;
     font-size: 12px;
     font-weight: 600;
-    color: var(--expanded-text);
+    color: var(--color-text-primary);
 }
 
 .comment-user::before {
@@ -330,19 +275,19 @@
     display: inline-block;
     width: 6px;
     height: 6px;
-    background: var(--expanded-accent);
+    background: var(--color-accent);
     border-radius: 50%;
 }
 
 .comment-time {
     font-weight: 400;
-    color: var(--expanded-text-muted);
+    color: var(--color-text-muted);
 }
 
 .comment-text {
     font-size: 14px;
     line-height: 1.6;
-    color: var(--expanded-text-secondary);
+    color: var(--color-text-secondary);
     padding-left: 14px;
     white-space: pre-wrap;
 }
@@ -363,78 +308,9 @@
     gap: 12px;
 }
 
-.comment-form-textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 14px;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--expanded-text);
-    background: var(--expanded-surface);
-    border: 1px solid var(--expanded-border);
-    border-radius: var(--expanded-radius);
-    box-sizing: border-box;
-    resize: vertical;
-    transition:
-        border-color var(--expanded-transition),
-        box-shadow var(--expanded-transition);
-}
-
-.comment-form-textarea::placeholder {
-    color: var(--expanded-text-muted);
-}
-
-.comment-form-textarea:focus {
-    outline: none;
-    border-color: var(--expanded-accent);
-    box-shadow: 0 0 0 3px var(--expanded-accent-subtle);
-}
-
 .comment-form-btn-container {
     display: flex;
     justify-content: flex-end;
-}
-
-.comment-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    background: var(--expanded-accent);
-    border: none;
-    border-radius: var(--expanded-radius);
-    cursor: pointer;
-    transition:
-        background-color var(--expanded-transition),
-        transform var(--expanded-transition);
-}
-
-.comment-btn:hover {
-    background: var(--expanded-accent-hover);
-}
-
-.comment-btn:active {
-    transform: translateY(1px);
-}
-
-/* ============================================
-   Empty Comments State
-   ============================================ */
-.comments-container:empty::after {
-    content: 'No comments yet';
-    display: block;
-    padding: 24px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--expanded-text-muted);
-    background: var(--expanded-surface);
-    border: 1px dashed var(--expanded-border);
-    border-radius: var(--expanded-radius);
 }
 
 /* ============================================
@@ -447,34 +323,16 @@
     justify-content: center;
     padding: 60px 24px;
     text-align: center;
-    background: var(--expanded-surface);
-    border: 1px solid var(--expanded-border);
-    border-radius: var(--expanded-radius);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
 }
 
 .error-state p {
     font-size: 14px;
-    color: var(--expanded-text-secondary);
+    color: var(--color-text-secondary);
     margin-bottom: 20px;
     max-width: 400px;
-}
-
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    background: var(--expanded-accent);
-    border-radius: var(--expanded-radius);
-    text-decoration: none;
-    transition:
-        background-color var(--expanded-transition);
-}
-
-.back-btn:hover {
-    background: var(--expanded-accent-hover);
 }
 
 /* ============================================
@@ -515,10 +373,6 @@
 
     .comment-form-input-container {
         flex-direction: column;
-    }
-
-    .comment-form-textarea {
-        min-height: 80px;
     }
 }
 

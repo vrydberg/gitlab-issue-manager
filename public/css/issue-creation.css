@@ -1,70 +1,275 @@
+/* Issue Creation - Editorial Form Design */
+
+/* ============================================
+   Main Container
+   ============================================ */
 #main-creation {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 30px;
+    width: 100%;
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 32px 24px;
     box-sizing: border-box;
+    gap: 0;
 }
 
+/* ============================================
+   Page Header - Breadcrumb Style
+   ============================================ */
+.create-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.create-header h1 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+/* Back Link / Breadcrumb */
+.create-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.create-back-link:hover {
+    color: var(--color-accent);
+}
+
+.create-back-link svg {
+    flex-shrink: 0;
+}
+
+.create-header-separator {
+    color: var(--color-border);
+    margin: 0 8px;
+    font-size: 14px;
+}
+
+/* ============================================
+   Form Container Card
+   ============================================ */
 .create-container {
     display: flex;
     flex-direction: column;
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* Form Header Section */
+.create-form-header {
+    display: flex;
     align-items: center;
-    width: 700px;
-    color: white;
-    box-sizing: border-box;
-    padding: 40px;
-    background-color: #424242;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    gap: 32px;
-  }
-  
-  .create-issue-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-  }
+    gap: 16px;
+    padding: 24px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-white);
+}
 
-  .form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-  }
-  
-  
-  .create-issue-title {
-    border-radius: 8px;
-    height: 36px;
-    border: none;
-    box-sizing: border-box;
-    padding: 10px;
-
-  }
-
-  .create-issue-description {
-    height: 200px;
-    border-radius: 8px;
-    resize: none;
-    box-sizing: border-box;
-    padding: 10px;
-  }
-
-  .create-issue-btn-container {
+.create-form-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* border: 2px solid red; */
-  }
-  
-  .create-issue-btn {
-    box-sizing: border-box;
-    padding: 8px;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px var(--color-accent-glow);
+}
+
+.create-form-icon svg {
+    color: var(--color-text-inverse);
+}
+
+.create-form-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.create-form-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+}
+
+.create-form-header p {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* ============================================
+   Form Styles
+   ============================================ */
+.create-issue-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Form Row */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.form-row:last-of-type {
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Labels */
+.form-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+}
+
+.form-row label::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 12px;
+    background: var(--color-accent);
+    border-radius: 2px;
+}
+
+/* ============================================
+   Form Footer / Submit Section
+   ============================================ */
+.create-issue-btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--color-border-subtle);
+}
+
+.create-form-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.create-form-hint svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+/* Submit Button - extends c-btn c-btn--primary */
+.create-issue-btn {
+    gap: 8px;
+    padding: 10px 20px;
+}
+
+.create-issue-btn svg {
+    flex-shrink: 0;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 768px) {
+    #main-creation {
+        padding: 20px 16px;
+    }
+
+    .create-form-header {
+        padding: 20px;
+    }
+
+    .create-form-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .create-form-header h2 {
+        font-size: 16px;
+    }
+
+    .form-row {
+        padding: 16px 20px;
+    }
+
+    .create-issue-btn-container {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px 20px;
+    }
+
+    .create-form-hint {
+        order: 2;
+    }
+
+    .create-issue-btn {
+        width: 100%;
+        order: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #main-creation {
+        padding: 16px 12px;
+    }
+
+    .create-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+    }
+
+    .create-form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .create-form-header h2 {
+        font-size: 15px;
+    }
+
+    .form-row {
+        padding: 14px 16px;
+    }
+
+    .create-issue-btn-container {
+        padding: 14px 16px;
+    }
+
+    .create-issue-btn {
+        padding: 10px 20px;
+    }
+
+    .create-form-hint {
+        font-size: 11px;
+        text-align: center;
+    }
 }

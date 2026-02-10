@@ -1,5 +1,67 @@
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
 
+/* ============================================
+   CSS Custom Properties - Design Tokens
+   ============================================ */
+:root {
+    /* Core palette */
+    --color-surface-dark: #2d2d2d;
+    --color-surface-darker: #242424;
+    --color-surface-light: #fafafa;
+    --color-surface-main: #F5F5F5;
+    --color-surface-white: #ffffff;
+    --color-row-hover: #fafafa;
+
+    /* Accent */
+    --color-accent: #FF7143;
+    --color-accent-hover: #DB4228;
+    --color-accent-subtle: rgba(255, 113, 67, 0.08);
+    --color-accent-subtle-10: rgba(255, 113, 67, 0.1);
+    --color-accent-glow: rgba(255, 113, 67, 0.15);
+
+    /* Status colors */
+    --color-status-open: #1a7f4b;
+    --color-status-open-bg: #e8f5ec;
+    --color-status-closed: #5a6570;
+    --color-status-closed-bg: #f0f1f3;
+
+    /* Semantic colors */
+    --color-error: #e74c3c;
+    --color-info: #3498db;
+    --color-info-hover: #2980b9;
+
+    /* Text */
+    --color-text-primary: #424242;
+    --color-text-secondary: #666666;
+    --color-text-muted: #999999;
+    --color-text-inverse: #ffffff;
+
+    /* Borders */
+    --color-border: #e5e5e5;
+    --color-border-subtle: #f0f0f0;
+    --color-border-dark: rgba(255, 255, 255, 0.08);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-accent: 0 2px 8px rgba(255, 113, 67, 0.15);
+
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+
+    /* Dimensions */
+    --header-height: 56px;
+    --sidebar-width: 220px;
+    --nav-junction-size: 44px;
+
+    /* Timing */
+    --transition-fast: 150ms ease;
+    --transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -9,9 +71,11 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    box-sizing: border-box;
     font-family: "Karla", sans-serif;
-    background-color: #F5F5F5;
-    color: #424242;
+    background-color: var(--color-surface-main);
+    color: var(--color-text-primary);
+    padding-top: var(--header-height);
 }
 
 main {
@@ -29,63 +93,422 @@ p {
 }
 
 .base-btn {
-    background-color: #FF7143;
+    background-color: var(--color-accent);
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: all var(--transition-fast);
     border: none;
 }
 
 a {
-    transition: all 0.5s ease;
+    transition: all var(--transition-fast);
 }
 
 .base-btn:hover {
-    background-color: #DB4228;
+    background-color: var(--color-accent-hover);
 }
 
-
+/* ============================================
+   Header - Unified Navigation Bar
+   ============================================ */
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
-    height: 60px;
+    height: var(--header-height);
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 15px;
-    font-size: 16px;
-    background-color: #424242 ;
+    padding: 0 14px;
+    font-size: 14px;
+    background-color: var(--color-surface-dark);
+    z-index: 200;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 20px
+    gap: 0;
+    flex: 1;
 }
 
-.header-anchor {
-    color: white;
-    padding: 6px 8px 6px 8px;
-    border-radius: 8px;
-    box-sizing: border-box;
+/* Brand zone - creates visual connection to sidebar */
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
+    color: var(--color-text-inverse);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color var(--transition-fast);
+    /* Width matches sidebar minus header padding */
+    width: calc(var(--sidebar-width) - 16px);
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
-.header-anchor:hover {
-    background-color: #FF7143;
+.header-brand:hover {
+    background-color: rgba(255, 255, 255, 0.06);
 }
 
-.header-anchor:active {
-    background-color: #1a252f;
+.header-brand-logo {
+    flex-shrink: 0;
+    border-radius: 4px;
+    transition: transform var(--transition-fast);
 }
 
+.header-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.header-brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+
+.header-brand-subtitle {
+    font-size: 10px;
+    font-weight: 400;
+    opacity: 0.5;
+    line-height: 1.1;
+}
+
+/* Divider between brand and nav area placeholder */
+.header-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--color-border-dark);
+    margin: 0 24px 0 0;
+    flex-shrink: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
 .header-logout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 32px;
+    height: 34px;
     box-sizing: border-box;
-    padding: 12px;
-    color: white;
+    padding: 0 14px;
+    color: var(--color-text-inverse);
     text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all var(--transition-fast);
+}
+
+.header-logout-btn:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* Repository indicator */
+.header-repo {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-inverse);
+    opacity: 0.7;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.repo-separator {
+    margin: 0 6px;
+    opacity: 0.5;
+}
+
+/* ============================================
+   Hamburger Button - Mobile Navigation
+   ============================================ */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    margin-right: 8px;
+    background: transparent;
+    border: none;
     border-radius: 8px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.hamburger-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.hamburger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--color-text-inverse);
+    border-radius: 1px;
+    transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+}
+
+/* Hamburger animation when sidebar is open */
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 800px) {
+    .header-brand {
+        width: auto;
+        margin-right: 12px;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .header-brand-text {
+        display: none;
+    }
+
+    .header-divider {
+        margin: 0 16px 0 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .header-brand {
+        width: auto;
+    }
+
+    .header-divider {
+        display: none;
+    }
+
+    .header-repo {
+        display: none;
+    }
+}
+
+/* ============================================
+   Component Classes
+   ============================================ */
+
+/* Avatar component */
+.c-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+    color: var(--color-text-inverse);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.c-avatar--md {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+}
+
+/* Status badge component */
+.c-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-lg);
+}
+
+.c-status__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.c-status--open {
+    color: var(--color-status-open);
+    background: var(--color-status-open-bg);
+}
+
+.c-status--open .c-status__dot {
+    background: var(--color-status-open);
+}
+
+.c-status--closed {
+    color: var(--color-status-closed);
+    background: var(--color-status-closed-bg);
+}
+
+.c-status--closed .c-status__dot {
+    background: var(--color-status-closed);
+}
+
+/* Button component */
+.c-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.c-btn--primary {
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--color-text-inverse);
+    background: var(--color-accent);
+}
+
+.c-btn--primary:hover {
+    background: var(--color-accent-hover);
+}
+
+.c-btn--primary:active {
+    transform: translateY(1px);
+}
+
+.c-btn--icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--color-text-secondary);
+}
+
+.c-btn--icon:hover {
+    color: var(--color-accent);
+    background: var(--color-surface-white);
+    border-color: var(--color-border);
+}
+
+/* Input component */
+.c-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.c-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.c-input:hover {
+    border-color: var(--color-text-muted);
+}
+
+.c-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.c-input--textarea {
+    min-height: 100px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.c-input--textarea-lg {
+    min-height: 180px;
+    line-height: 1.7;
+}
+
+/* ============================================
+   GitLab API Attribution
+   ============================================ */
+.gitlab-credit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.gitlab-credit:hover {
+    color: var(--color-text-secondary);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.gitlab-credit svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
+}
+
+.gitlab-credit:hover svg {
+    opacity: 1;
+}
+
+.gitlab-credit--sidebar {
+    margin: 16px 10px 0;
+    padding: 10px 12px;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.gitlab-credit--login {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.gitlab-credit--login:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
 }

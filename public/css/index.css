@@ -1,8 +1,15 @@
+/* Override body padding since login page has no header */
+body:has(.main-index) {
+    padding-top: 0;
+}
+
 .main-index {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
+    min-height: 100vh;
 }
 
 .login-container {
@@ -10,35 +17,35 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 160px;
-    width: 365px;
-    background-color: #424242;
-    gap: 20px;
-    border-radius: 8px;
-    color: white;
+    padding: 32px 40px;
+    width: 320px;
+    background-color: var(--color-text-primary);
+    gap: 24px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-inverse);
 }
 
 .login-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
-
-.login-header-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    height: 42px;
-    width: 42px;
-    padding: 4px;
-    box-sizing: border-box;
-    background-color: white;
+.login-logo {
+    border-radius: 6px;
 }
 
 .login-header-text {
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.login-header-subtitle {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.5;
 }
 
 .login-btn {
@@ -47,10 +54,7 @@
     justify-content: center;
     height: 32px;
     width: 60px;
-    color: white;
+    color: var(--color-text-inverse);
     text-decoration: none;
-    border-radius: 8px;    
+    border-radius: var(--radius-md);
 }
-
-
-

@@ -1,31 +1,12 @@
 /* Issues Explorer - Minimal & Utilitarian */
 
 /* ============================================
-   Main Container & CSS Custom Properties
+   Main Container
    ============================================ */
 #main-explorer {
-    /* Custom Properties */
-    --explorer-bg: #fafafa;
-    --explorer-surface: #ffffff;
-    --explorer-border: #e5e5e5;
-    --explorer-border-subtle: #f0f0f0;
-    --explorer-text: #424242;
-    --explorer-text-secondary: #666666;
-    --explorer-text-muted: #999999;
-    --explorer-accent: #FF7143;
-    --explorer-accent-hover: #DB4228;
-    --explorer-open: #1a7f4b;
-    --explorer-open-bg: #e8f5ec;
-    --explorer-closed: #5a6570;
-    --explorer-closed-bg: #f0f1f3;
-    --explorer-row-hover: #fafafa;
-    --explorer-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --explorer-radius: 4px;
-    --explorer-transition: 150ms ease;
-
-    /* Layout */
     display: flex;
     flex-direction: column;
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     padding: 32px 24px;
@@ -41,7 +22,7 @@
     align-items: baseline;
     margin-bottom: 24px;
     padding-bottom: 16px;
-    border-bottom: 1px solid var(--explorer-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .explorer-header-content {
@@ -53,15 +34,15 @@
 .explorer-title {
     font-size: 24px;
     font-weight: 700;
-    color: var(--explorer-text);
+    color: var(--color-text-primary);
     letter-spacing: -0.02em;
 }
 
 .explorer-count {
     font-size: 13px;
     font-weight: 600;
-    color: var(--explorer-text-muted);
-    background: var(--explorer-border-subtle);
+    color: var(--color-text-muted);
+    background: var(--color-border-subtle);
     padding: 2px 8px;
     border-radius: 10px;
 }
@@ -74,17 +55,17 @@
 
 .explorer-updated {
     font-size: 12px;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
 }
 
 /* ============================================
    Issue List Container
    ============================================ */
 .issue-list-container {
-    background: var(--explorer-surface);
-    border: 1px solid var(--explorer-border);
-    border-radius: var(--explorer-radius);
-    box-shadow: var(--explorer-shadow);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
@@ -94,15 +75,15 @@
 .issue-list-header {
     display: grid;
     grid-template-columns: 90px 1fr 160px 70px 100px 70px;
-    gap: 12px;
+    gap: 16px;
     padding: 10px 20px;
-    background: var(--explorer-border-subtle);
-    border-bottom: 1px solid var(--explorer-border);
+    background: var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border);
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
 }
 
 .issue-list-header span,
@@ -123,13 +104,13 @@
 .sortable {
     cursor: pointer;
     text-decoration: none;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
     gap: 4px;
-    transition: color var(--explorer-transition);
+    transition: color var(--transition-fast);
 }
 
 .sortable:hover {
-    color: var(--explorer-text-secondary);
+    color: var(--color-text-secondary);
 }
 
 .sort-arrow {
@@ -138,7 +119,7 @@
     height: 0;
     margin-left: 2px;
     opacity: 0;
-    transition: opacity var(--explorer-transition);
+    transition: opacity var(--transition-fast);
 }
 
 .sortable:hover .sort-arrow {
@@ -178,11 +159,11 @@
 .issue {
     display: grid;
     grid-template-columns: 90px 1fr 160px 70px 100px 70px;
-    gap: 12px;
+    gap: 16px;
     align-items: center;
     padding: 14px 20px;
-    border-bottom: 1px solid var(--explorer-border-subtle);
-    transition: background-color var(--explorer-transition);
+    border-bottom: 1px solid var(--color-border-subtle);
+    transition: background-color var(--transition-fast);
 }
 
 .issue:last-child {
@@ -190,8 +171,8 @@
 }
 
 .issue:hover {
-    background: var(--explorer-row-hover);
-    box-shadow: inset 3px 0 0 var(--explorer-accent);
+    background: var(--color-row-hover);
+    box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
 /* ============================================
@@ -200,40 +181,6 @@
 .issue-status-cell {
     display: flex;
     align-items: center;
-}
-
-.issue-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 12px;
-}
-
-.status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-}
-
-.status-open {
-    color: var(--explorer-open);
-    background: var(--explorer-open-bg);
-}
-
-.status-open .status-dot {
-    background: var(--explorer-open);
-}
-
-.status-closed {
-    color: var(--explorer-closed);
-    background: var(--explorer-closed-bg);
-}
-
-.status-closed .status-dot {
-    background: var(--explorer-closed);
 }
 
 /* ============================================
@@ -256,7 +203,7 @@
 .issue-title {
     font-size: 15px;
     font-weight: 500;
-    color: var(--explorer-text);
+    color: var(--color-text-primary);
     line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
@@ -267,7 +214,7 @@
     flex-shrink: 0;
     font-size: 12px;
     font-weight: 500;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
 }
 
@@ -281,20 +228,6 @@
     min-width: 0;
 }
 
-.issue-created .author-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--explorer-accent) 0%, var(--explorer-accent-hover) 100%);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
 .created-details {
     display: flex;
     flex-direction: column;
@@ -305,7 +238,7 @@
 .created-author {
     font-size: 12px;
     font-weight: 500;
-    color: var(--explorer-text);
+    color: var(--color-text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -313,7 +246,7 @@
 
 .created-date {
     font-size: 11px;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
 }
 
@@ -331,7 +264,7 @@
     gap: 4px;
     font-size: 12px;
     font-weight: 500;
-    color: var(--explorer-text-secondary);
+    color: var(--color-text-secondary);
 }
 
 .comment-count svg {
@@ -339,7 +272,7 @@
 }
 
 .comment-count.muted {
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
     opacity: 0.6;
 }
 
@@ -353,7 +286,7 @@
 
 .updated-date {
     font-size: 12px;
-    color: var(--explorer-text-secondary);
+    color: var(--color-text-secondary);
     font-variant-numeric: tabular-nums;
 }
 
@@ -366,37 +299,6 @@
     gap: 4px;
 }
 
-.action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--explorer-radius);
-    color: var(--explorer-text-secondary);
-    background: transparent;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition:
-        color var(--explorer-transition),
-        background-color var(--explorer-transition),
-        border-color var(--explorer-transition);
-}
-
-.action-btn:hover {
-    color: var(--explorer-accent);
-    background: var(--explorer-surface);
-    border-color: var(--explorer-border);
-}
-
-.action-btn:active {
-    background: var(--explorer-border-subtle);
-}
-
-.action-btn svg {
-    flex-shrink: 0;
-}
-
 /* ============================================
    Pagination Footer
    ============================================ */
@@ -405,10 +307,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 20px;
-    background: var(--explorer-border-subtle);
-    border-top: 1px solid var(--explorer-border);
+    background: var(--color-border-subtle);
+    border-top: 1px solid var(--color-border);
     font-size: 12px;
-    color: var(--explorer-text-secondary);
+    color: var(--color-text-secondary);
 }
 
 .pagination-info {
@@ -428,21 +330,21 @@
     padding: 6px 12px;
     font-size: 12px;
     font-weight: 500;
-    color: var(--explorer-text-secondary);
-    background: var(--explorer-surface);
-    border: 1px solid var(--explorer-border);
-    border-radius: var(--explorer-radius);
+    color: var(--color-text-secondary);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     text-decoration: none;
     cursor: pointer;
     transition:
-        color var(--explorer-transition),
-        background-color var(--explorer-transition),
-        border-color var(--explorer-transition);
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
 .pagination-btn:hover:not(.disabled) {
-    color: var(--explorer-accent);
-    border-color: var(--explorer-accent);
+    color: var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 .pagination-btn.disabled {
@@ -451,7 +353,7 @@
 }
 
 .pagination-pages {
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
 }
 
@@ -463,21 +365,21 @@
 }
 
 .per-page-selector label {
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
 }
 
 .per-page-selector select {
     padding: 4px 8px;
     font-size: 12px;
-    border: 1px solid var(--explorer-border);
-    border-radius: var(--explorer-radius);
-    background: var(--explorer-surface);
-    color: var(--explorer-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-white);
+    color: var(--color-text-primary);
     cursor: pointer;
 }
 
 .per-page-selector select:hover {
-    border-color: var(--explorer-text-muted);
+    border-color: var(--color-text-muted);
 }
 
 /* ============================================
@@ -489,7 +391,7 @@
     align-items: center;
     justify-content: center;
     padding: 60px 20px;
-    color: var(--explorer-text-muted);
+    color: var(--color-text-muted);
 }
 
 .empty-state svg {
@@ -514,23 +416,7 @@
     }
 }
 
-@media (max-width: 1000px) {
-    .issue-list-header {
-        grid-template-columns: 80px 1fr 60px 80px 60px;
-    }
-
-    .issue {
-        grid-template-columns: 80px 1fr 60px 80px 60px;
-    }
-
-    .issue-created {
-        display: none;
-    }
-
-    .col-created {
-        display: none;
-    }
-}
+/* Card layout at 900px (synced with sidebar collapse) */
 
 @media (max-width: 900px) {
     .issue-list-header {
@@ -589,11 +475,13 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     #main-explorer {
-        padding: 16px 12px;
+        padding: 20px 16px;
     }
+}
 
+@media (max-width: 600px) {
     .explorer-header {
         flex-direction: column;
         gap: 8px;
@@ -608,7 +496,7 @@
         font-size: 14px;
     }
 
-    .issue-created .author-avatar {
+    .issue-created .c-avatar {
         width: 20px;
         height: 20px;
         font-size: 10px;
@@ -620,5 +508,11 @@
 
     .created-date {
         font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #main-explorer {
+        padding: 16px 12px;
     }
 }
