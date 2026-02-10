@@ -26,6 +26,7 @@ class GitLabApiClient {
    */
   async getIssues (options = {}) {
     const params = {}
+    if (options.state) params.state = options.state
     if (options.orderBy) params.order_by = options.orderBy
     if (options.sort) params.sort = options.sort
     if (options.page) params.page = options.page
@@ -102,6 +103,15 @@ class GitLabApiClient {
    */
   async getUser (userId) {
     const response = await this.client.get(`/users/${userId}`)
+    return response.data
+  }
+
+  /**
+   * Get project information
+   * @returns {Promise<Object>} Project object with metadata
+   */
+  async getProject () {
+    const response = await this.client.get(`/projects/${this.projectId}`)
     return response.data
   }
 }
