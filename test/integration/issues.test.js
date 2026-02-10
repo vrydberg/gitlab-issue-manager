@@ -1,26 +1,28 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, vi, beforeAll } from 'vitest'
 
-// Mock axios before importing app
-vi.mock('axios', () => ({
+// Mock gitlabApi before importing routes
+vi.mock('../../src/services/gitlabApi.js', () => ({
   default: {
-    create: vi.fn(() => ({
-      get: vi.fn(),
-      post: vi.fn(),
-      put: vi.fn()
-    }))
+    getIssues: vi.fn(),
+    getIssue: vi.fn(),
+    getNotes: vi.fn(),
+    updateIssue: vi.fn(),
+    addNote: vi.fn(),
+    createIssue: vi.fn()
   }
 }))
 
 describe('Issues Integration', () => {
   let request
   let app
+  let gitlabApi
 
   beforeAll(async () => {
-    // Dynamic import after mocks are set up
     const supertest = await import('supertest')
     request = supertest.default
 
-    // Import a simplified test server
+    gitlabApi = (await import('../../src/services/gitlabApi.js')).default
+
     const express = await import('express')
     app = express.default()
 
@@ -28,6 +30,13 @@ describe('Issues Integration', () => {
     app.set('views', './src/views')
     app.use(express.default.json())
     app.use(express.default.urlencoded({ extended: true }))
+
+    // Provide template locals that partials expect
+    app.use((req, res, next) => {
+      res.locals.user = null
+      res.locals.projectPath = 'test/project'
+      next()
+    })
 
     // Import routes with mocked dependencies
     const { default: issueRoutes } = await import('../../src/routes/issueRoutes.js')
@@ -40,20 +49,46 @@ describe('Issues Integration', () => {
   })
 
   describe('GET /issues', () => {
-    it('returns issues explorer page with mock data', async () => {
+    it('returns issues explorer page', async () => {
+      gitlabApi.getIssues.mockResolvedValue({
+        issues: [
+          {
+            iid: 1,
+            title: 'Test issue',
+            state: 'opened',
+            created_at: '2024-01-15T10:30:00Z',
+            updated_at: '2024-01-16T10:30:00Z',
+            user_notes_count: 2,
+            author: { username: 'testuser' }
+          }
+        ],
+        pagination: { page: 1, perPage: 20, total: 1, totalPages: 1 }
+      })
+
       const response = await request(app)
-        .get('/issues?mock=true')
+        .get('/issues')
         .expect('Content-Type', /html/)
         .expect(200)
 
-      expect(response.text).toContain('Issues Explorer')
+      expect(response.text).toContain('Issues')
+      expect(response.text).toContain('Test issue')
     })
   })
 
   describe('GET /issues/expanded/:iid', () => {
-    it('returns expanded issue page with mock data', async () => {
+    it('returns expanded issue page', async () => {
+      gitlabApi.getIssue.mockResolvedValue({
+        iid: 1,
+        title: 'Implement user authentication flow',
+        state: 'opened',
+        description: 'A detailed description',
+        created_at: '2024-01-15T10:30:00Z',
+        author: { username: 'testuser' }
+      })
+      gitlabApi.getNotes.mockResolvedValue([])
+
       const response = await request(app)
-        .get('/issues/expanded/1?mock=true')
+        .get('/issues/expanded/1')
         .expect('Content-Type', /html/)
         .expect(200)
 
@@ -81,11 +116,14 @@ describe('Issues Integration', () => {
     })
 
     it('accepts valid close state_event', async () => {
-      // This will fail at the API call level since axios is mocked
-      // but validates the request passes validation
-      await request(app)
+      gitlabApi.updateIssue.mockResolvedValue({ iid: 1, state: 'closed' })
+
+      const response = await request(app)
         .put('/issues/update-issue-status/1')
         .send({ state_event: 'close' })
+        .expect(200)
+
+      expect(response.body.success).toBe(true)
     })
   })
 

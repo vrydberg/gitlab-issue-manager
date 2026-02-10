@@ -6,8 +6,8 @@ describe('formatDate', () => {
     const isoDate = '2024-01-15T10:30:00Z'
     const result = formatDate(isoDate)
 
-    // Should contain date parts (format: DD/MM/YY, HH:MM)
-    expect(result).toMatch(/\d{2}\/\d{2}\/\d{2}/)
+    // Should contain date parts (format: "Jan 15, 2024, HH:MM")
+    expect(result).toMatch(/[A-Z][a-z]{2} \d{1,2}, \d{4}/)
     expect(result).toMatch(/\d{2}:\d{2}/)
   })
 
@@ -28,8 +28,8 @@ describe('formatDate', () => {
 
     dates.forEach(date => {
       const result = formatDate(date)
-      // Verify it matches expected format pattern
-      expect(result).toMatch(/\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}/)
+      // Verify it matches expected format pattern (e.g., "Jan 1, 2024, 01:00")
+      expect(result).toMatch(/[A-Z][a-z]{2} \d{1,2}, \d{4}, \d{2}:\d{2}/)
     })
   })
 
