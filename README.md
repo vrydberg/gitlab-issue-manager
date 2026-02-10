@@ -1,6 +1,4 @@
-# GitLab Issue Manager
-
-<!-- [![CI](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/vrydberg/gitlab-issue-manager/actions/workflows/ci.yml) -->
+# IssueManager for GitLab
 
 A real-time issue management dashboard for GitLab. Connects to a GitLab repository via OAuth2 and provides live updates through WebSocket integration — when issues are created, updated, or commented on in GitLab, the dashboard reflects changes instantly without page refresh.
 
@@ -11,6 +9,24 @@ A real-time issue management dashboard for GitLab. Connects to a GitLab reposito
 - **Centralized API layer** — All GitLab API calls routed through a single Axios service client
 - **Input validation** — Express middleware validates and sanitizes all user input
 - **Error handling** — Global error handler with user-friendly error pages
+
+## Screenshots
+
+<div align="center">
+  <img src="./public/screenshots/issues-explorer.png" alt="Issues Explorer Page" width="49%" />
+  <img src="./public/screenshots/expanded-issue.png" alt="Expanded Issue Page" width="49%"/>
+</div>
+
+<div align="center">
+  <img src="./public/screenshots/issue-creation.png" alt="Issue Creation Page" width="49%" />
+  <img src="./public/screenshots/repo-info.png" alt="Repo Information Page" width="49%" />
+</div>
+
+<div align="center">
+  <img src="./public/screenshots/oauth.png" alt="Oauth Confirmation" width="49%"/>
+  <img src="./public/screenshots/login.png" alt="Login Page" width="49%" />
+</div>
+
 
 ## Tech Stack
 
@@ -87,7 +103,7 @@ cp .env.example .env
 # GitLab OAuth (create at GitLab > Preferences > Applications)
 GITLAB_OAUTH_APP_ID=
 GITLAB_OAUTH_APP_SECRET=
-GITLAB_OAUTH_CALLBACK=http://localhost:3000/gitlab/callback
+GITLAB_OAUTH_CALLBACK=https://your-domain.com/gitlab/callback
 
 # GitLab API
 GITLAB_BASE_URL=https://gitlab.com
@@ -144,4 +160,4 @@ npm run lint          # Run all linters (ESLint, StyleLint, HTMLHint)
 
 ## License
 
-ISC
+MIT
