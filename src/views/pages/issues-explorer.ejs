@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <% hasSidebar = true; %>
     <%- include('../partials/head'); %>
 </head>
-<body class="has-timeline">
+<body class="has-sidebar">
 
     <%- include('../partials/auth-header') -%>
+    <% currentPage = 'explorer'; sidebarContext = 'explorer'; %>
+    <%- include('../partials/sidebar') -%>
 
     <main id="main-explorer">
 
@@ -29,6 +32,7 @@
                     params.set('sort', newSort);
                     params.set('page', '1');
                     params.set('per_page', pagination.perPage.toString());
+                    if (typeof activeFilter !== 'undefined' && activeFilter !== 'all') params.set('state', activeFilter);
                     if (typeof mock !== 'undefined') params.set('mock', 'true');
                     return '/issues/?' + params.toString();
                 };
@@ -62,13 +66,13 @@
                         <article class="issue" data-iid="<%= issues[i].iid %>">
                             <div class="issue-status-cell">
                                 <% if (issues[i].state === 'opened') { %>
-                                    <span class="issue-status status-open">
-                                        <span class="status-dot"></span>
+                                    <span class="c-status c-status--open">
+                                        <span class="c-status__dot"></span>
                                         Open
                                     </span>
                                 <% } else { %>
-                                    <span class="issue-status status-closed">
-                                        <span class="status-dot"></span>
+                                    <span class="c-status c-status--closed">
+                                        <span class="c-status__dot"></span>
                                         Closed
                                     </span>
                                 <% } %>
@@ -82,10 +86,10 @@
                             </div>
 
                             <div class="issue-created">
-                                <span class="author-avatar"><%= issues[i].author.username.charAt(0).toUpperCase() %></span>
+                                <span class="c-avatar c-avatar--md"><%= issues[i].author.username.charAt(0).toUpperCase() %></span>
                                 <div class="created-details">
                                     <span class="created-author"><%= issues[i].author.username %></span>
-                                    <time class="created-date"><%= issues[i].created_at %></time>
+                                    <time class="created-date"><%= issues[i].created_at_formatted %></time>
                                 </div>
                             </div>
 
@@ -104,7 +108,7 @@
 
                             <div class="issue-actions">
                                 <a href="/issues/expanded/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
-                                   class="action-btn action-view"
+                                   class="c-btn c-btn--icon"
                                    title="View details"
                                    aria-label="View issue details">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -113,7 +117,7 @@
                                     </svg>
                                 </a>
                                 <a href="/issues/edit/<%= issues[i].iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>"
-                                   class="action-btn action-edit"
+                                   class="c-btn c-btn--icon"
                                    title="Edit issue"
                                    aria-label="Edit issue">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -187,6 +191,7 @@
             sort: '<%= sorting.sort %>',
             page: <%= pagination.page %>,
             perPage: <%= pagination.perPage %>,
+            state: '<%= typeof activeFilter !== "undefined" ? activeFilter : "all" %>',
             mock: <%= typeof mock !== 'undefined' ? 'true' : 'false' %>
         };
     </script>

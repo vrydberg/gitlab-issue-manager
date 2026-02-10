@@ -1,39 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <% hasSidebar = true; %>
     <%- include('../partials/head'); %>
 </head>
-<body>
-    
+<body class="has-sidebar">
+
     <%- include('../partials/auth-header') -%>
+    <% currentPage = 'edit'; sidebarContext = 'edit'; %>
+    <%- include('../partials/sidebar') -%>
 
     <main id="main-creation">
 
+        <div class="create-header">
+            <a href="/issues/expanded/<%= issue.iid %><%= typeof mock !== 'undefined' ? '?mock=true' : '' %>" class="create-back-link">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Issue #<%= issue.iid %>
+            </a>
+            <span class="create-header-separator">/</span>
+            <h1>Edit</h1>
+        </div>
+
         <div class="create-container">
 
-            <h2>Edit Existing Issue</h2>
+            <div class="create-form-header">
+                <div class="create-form-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M16.5 3.5l4 4-12 12H4.5v-4l12-12z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 6l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="create-form-header-text">
+                    <h2>Edit Issue</h2>
+                    <p>Update the title or description of this issue</p>
+                </div>
+            </div>
 
             <form class="create-issue-form" method="POST" action="/issues/edit/<%= issue.iid %>/?_method=PUT">
-              <div class="form-row">
-                <label for="issue-title">Title</label>
-                <input type="text" class="create-issue-title" name="title" required placeholder="Enter issue title" value="<%= issue.title %>"/>
-              </div>
-          
-              <div class="form-row">
-                <label for="issue-description">Description</label>
-                <textarea class="create-issue-description" name="description" rows="5" required placeholder="Provide a description of the issue"><%= issue.description %></textarea>
-              </div>
-          
-              <div class="create-issue-btn-container">
-                <button type="submit" class="base-btn create-issue-btn">Save Changes</button>
-              </div>
+                <div class="form-row">
+                    <label for="issue-title">Title</label>
+                    <input
+                        type="text"
+                        id="issue-title"
+                        class="c-input"
+                        name="title"
+                        required
+                        placeholder="Brief summary of the issue"
+                        autocomplete="off"
+                        value="<%= issue.title %>"
+                    />
+                </div>
+
+                <div class="form-row">
+                    <label for="issue-description">Description</label>
+                    <textarea
+                        id="issue-description"
+                        class="c-input c-input--textarea c-input--textarea-lg"
+                        name="description"
+                        rows="5"
+                        required
+                        placeholder="Provide details about the issue."
+                    ><%= issue.description %></textarea>
+                </div>
+
+
+                <div class="create-issue-btn-container">
+                    <span class="create-form-hint">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 5v3M8 10v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        All fields are required
+                    </span>
+                    <button type="submit" class="c-btn c-btn--primary create-issue-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M12 4L6.5 10.5 4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Save Changes
+                    </button>
+                </div>
             </form>
         </div>
 
-        
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/client.js"></script>
-    
+
 </body>
 </html>

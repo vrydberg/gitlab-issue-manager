@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <% hasSidebar = true; %>
     <%- include('../partials/head'); %>
 </head>
-<body class="has-timeline">
+<body class="has-sidebar">
 
     <%- include('../partials/auth-header') -%>
+    <% currentPage = 'issue'; sidebarContext = 'issue'; %>
+    <%- include('../partials/sidebar') -%>
 
     <main id="main-expanded">
 
@@ -56,13 +59,13 @@
 
                     <div class="issue-info">
                         <% if (issue.state === 'opened') { %>
-                            <span class="issue-status status-open">
-                                <span class="status-dot"></span>
+                            <span class="c-status c-status--open">
+                                <span class="c-status__dot"></span>
                                 Open
                             </span>
                         <% } else { %>
-                            <span class="issue-status status-closed">
-                                <span class="status-dot"></span>
+                            <span class="c-status c-status--closed">
+                                <span class="c-status__dot"></span>
                                 Closed
                             </span>
                         <% } %>
@@ -91,10 +94,10 @@
 
                     <form action="/issues/add-comment/<%= issue.iid %>" method="POST" class="comment-form">
                         <div class="comment-form-input-container">
-                            <textarea class="comment-form-textarea" id="new-comment" name="comment" rows="4" placeholder="Add a comment..." required></textarea>
+                            <textarea class="c-input c-input--textarea" id="new-comment" name="comment" rows="4" placeholder="Add a comment..." required></textarea>
 
                             <div class="comment-form-btn-container">
-                                <button type="submit" class="comment-btn">Post Comment</button>
+                                <button type="submit" class="c-btn c-btn--primary">Post Comment</button>
                             </div>
                         </div>
                     </form>
@@ -105,7 +108,7 @@
         <% } else { %>
             <div class="error-state">
                 <p>Unable to load issue. The requested issue may not exist or you may not have permission to view it.</p>
-                <a href="/issues/" class="back-btn">Return to Issues</a>
+                <a href="/issues/" class="c-btn c-btn--primary">Return to Issues</a>
             </div>
         <% } %>
 

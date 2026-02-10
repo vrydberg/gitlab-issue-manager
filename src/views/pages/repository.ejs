@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% hasSidebar = true; %>
+    <%- include('../partials/head'); %>
+</head>
+<body class="has-sidebar">
+
+    <%- include('../partials/auth-header') -%>
+    <% currentPage = 'repository'; sidebarContext = 'repository'; %>
+    <%- include('../partials/sidebar') -%>
+
+    <main id="main-repository">
+
+        <div class="repository-container">
+
+            <div class="repository-header">
+                <h2><%= project.name %></h2>
+                <span class="visibility-badge visibility-<%= project.visibility %>"><%= project.visibility %></span>
+            </div>
+
+            <% if (project.description) { %>
+            <p class="repository-description"><%= project.description %></p>
+            <% } %>
+
+            <div class="repository-meta">
+                <a href="<%= project.web_url %>" target="_blank" rel="noopener noreferrer" class="repository-link">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 3H3.5A1.5 1.5 0 002 4.5v8A1.5 1.5 0 003.5 14h8a1.5 1.5 0 001.5-1.5V10M9 2h5v5M14 2L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    View on GitLab
+                </a>
+            </div>
+
+            <div class="repository-sections">
+
+                <section class="repository-section">
+                    <h3>Details</h3>
+                    <dl class="repository-details">
+                        <div class="detail-row">
+                            <dt>Full Path</dt>
+                            <dd><%= project.path_with_namespace %></dd>
+                        </div>
+                        <div class="detail-row">
+                            <dt>Default Branch</dt>
+                            <dd><%= project.default_branch || 'N/A' %></dd>
+                        </div>
+                        <div class="detail-row">
+                            <dt>Namespace</dt>
+                            <dd><%= project.namespace ? project.namespace.full_path : 'N/A' %></dd>
+                        </div>
+                        <div class="detail-row">
+                            <dt>Project ID</dt>
+                            <dd><%= project.id %></dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="repository-section">
+                    <h3>Statistics</h3>
+                    <div class="repository-stats">
+                        <div class="stat-item">
+                            <span class="stat-value"><%= project.star_count || 0 %></span>
+                            <span class="stat-label">Stars</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value"><%= project.forks_count || 0 %></span>
+                            <span class="stat-label">Forks</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value"><%= project.open_issues_count || 0 %></span>
+                            <span class="stat-label">Open Issues</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="repository-section">
+                    <h3>Activity</h3>
+                    <dl class="repository-details">
+                        <div class="detail-row">
+                            <dt>Created</dt>
+                            <dd><%= new Date(project.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></dd>
+                        </div>
+                        <div class="detail-row">
+                            <dt>Last Activity</dt>
+                            <dd><%= new Date(project.last_activity_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <% if (project.topics && project.topics.length > 0) { %>
+                <section class="repository-section">
+                    <h3>Topics</h3>
+                    <div class="repository-topics">
+                        <% project.topics.forEach(function(topic) { %>
+                            <span class="topic-tag"><%= topic %></span>
+                        <% }); %>
+                    </div>
+                </section>
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+
+</body>
+</html>
