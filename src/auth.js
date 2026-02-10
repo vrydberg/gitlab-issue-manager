@@ -5,7 +5,6 @@ import passportGitlab from 'passport-gitlab2'
 const GitLabStrategy = passportGitlab
 dotenv.config()
 
-// Initialize GitLab OAuth2 strategy
 passport.use(
   new GitLabStrategy(
     {
@@ -37,8 +36,7 @@ const isAuthenticated = (req, res, next) => {
   if (req.user) {
     return next()
   }
-  console.log('User is not authenticated')
-  return res.status(401)
+  return res.redirect('/')
 }
 
 // Export default passport module instance

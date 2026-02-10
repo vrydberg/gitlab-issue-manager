@@ -5,8 +5,9 @@ import methodOverride from 'method-override'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { passport, isAuthenticated } from './auth.js'
-import { getRequest } from './http.js'
+import gitlabApi from './services/gitlabApi.js'
 import issueRoutes from './routes/issueRoutes.js'
+import { notFoundHandler, errorHandler } from './middleware/errorHandler.js'
 
 dotenv.config()
 
@@ -16,10 +17,7 @@ const httpServer = createServer(app)
 const io = new Server(httpServer)
 
 io.on('connection', (socket) => {
-  console.log('a user connected')
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  })
+  socket.on('disconnect', () => {})
 })
 
 app.set('view engine', 'ejs')
@@ -27,7 +25,7 @@ app.set('views', './src/views')
 
 // Apply express-session middleware
 app.use(session({
-  secret: '2c339e76c6bd214d1a62e35a162b7a47abc56578ca2da5b83dc833342f7f08c1',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -55,16 +53,47 @@ app.get('/gitlab', passport.authenticate('gitlab', {
 }))
 
 // GitLab OAuth callback handler to determine whether user authenticated themselves
-app.get('/gitlab/callback',
-  passport.authenticate('gitlab', {
-    successRedirect: '/issues',
-    failureRedirect: '/failure'
+app.get('/gitlab/callback', (req, res, next) => {
+  passport.authenticate('gitlab', { keepSessionInfo: true }, (err, user, info) => {
+    if (err) return next(err)
+    if (!user) return res.redirect('/')
+    req.logIn(user, { keepSessionInfo: true }, (loginErr) => {
+      if (loginErr) return next(loginErr)
+      return res.redirect('/issues')
+    })
+  })(req, res, next)
+})
+
+// Logout route
+app.post('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err)
+    }
+    res.redirect('/')
   })
-)
+})
+
+// Test route for socket events (development only)
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/test-socket/:event', (req, res) => {
+    const { event } = req.params
+    const events = {
+      issue: () => io.emit('newIssue', { iid: 999, title: 'Test issue from socket' }),
+      status: () => io.emit('statusUpdated', { iid: 999, newState: 'closed' }),
+      comment: () => io.emit('newComment', { iid: 999, author: { username: 'testuser' } })
+    }
+    if (events[event]) {
+      events[event]()
+      res.send(`Emitted ${event} event`)
+    } else {
+      res.status(400).send('Invalid event. Use: issue, status, or comment')
+    }
+  })
+}
 
 // Handles incoming webhooks from Gitlab and emits io events to clients to be handled on frontend
 app.post('/webhook', async (req, res) => {
-  console.log('received a web hook')
   try {
     if (req.headers['x-gitlab-token'] !== process.env.WEBHOOK_SECRET) {
       return res.status(403).send('Forbidden')
@@ -72,19 +101,11 @@ app.post('/webhook', async (req, res) => {
 
     const gitlabEvent = req.body
 
-    console.log(gitlabEvent)
-
     if (gitlabEvent.object_kind === 'issue') {
       const action = gitlabEvent.object_attributes.action
       const issue = req.body.object_attributes
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-        }
-      }
-
-      const author = await getRequest(`${process.env.GITLAB_BASE_URL}/api/v4/users/${issue.author_id}`, config)
+      const author = await gitlabApi.getUser(issue.author_id)
 
       if (action === 'open') {
         io.emit('newIssue', {
@@ -119,14 +140,43 @@ app.post('/webhook', async (req, res) => {
         })
       }
     }
+
+    res.status(200).send('OK')
   } catch (error) {
-    console.log(error)
+    console.error('Webhook error:', error)
+    res.status(500).send('Internal Server Error')
   }
 })
 
+// Make authenticated user available to all views
+app.use((req, res, next) => {
+  res.locals.user = req.user || null
+  next()
+})
+
+// Middleware to provide project info to all views
+let cachedProjectPath = null
+app.use(async (req, res, next) => {
+  if (!cachedProjectPath) {
+    try {
+      const project = await gitlabApi.getProject()
+      cachedProjectPath = project.path_with_namespace
+    } catch {
+      cachedProjectPath = ''
+    }
+  }
+  res.locals.projectPath = cachedProjectPath
+  next()
+})
+
+// Protected issue routes
 app.use('/issues', isAuthenticated, issueRoutes)
+
+// Error handling
+app.use(notFoundHandler)
+app.use(errorHandler)
 
 // Starts the HTTP server on the given port number
 httpServer.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}}`)
+  console.log(`Server listening on port ${process.env.PORT}`)
 })
