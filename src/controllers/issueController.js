@@ -1,47 +1,113 @@
-import { getRequest, postRequest, putRequest } from '../http.js'
+import gitlabApi from '../services/gitlabApi.js'
+import { AppError } from '../middleware/errorHandler.js'
 
-// Function that helps format ISO dates retrieved from Gitlab responses
-const formatDate = (unformattedDate) => {
-  const createdDate = new Date(unformattedDate)
+/**
+ * Format ISO date to readable string (e.g., "Jan 28, 2026, 10:30")
+ * @param {string} unformattedDate - ISO date string
+ * @returns {string} Formatted date string
+ */
+export const formatDate = (unformattedDate) => {
+  const date = new Date(unformattedDate)
 
   const options = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
   }
 
-  const formattedDate = createdDate.toLocaleString('en-uk', options)
-
-  return formattedDate
+  return date.toLocaleString('en-US', options)
 }
 
 // Fetches the issues to be rendered on explorer view page
 const fetchExplorerIssues = async (req, res, next) => {
   try {
-    console.log(process.env.GITLAB_PROJECT_ID)
-    const issuesUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues`
-    const issuesConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
-    }
-    const issues = await getRequest(issuesUrl, issuesConfig)
+    // Parse query params with defaults
+    const orderBy = req.query.order_by || 'created_at'
+    const sort = req.query.sort || 'desc'
+    const page = parseInt(req.query.page, 10) || 1
+    const perPage = parseInt(req.query.per_page, 10) || 20
+    const state = req.query.state || 'all'
 
-    console.log(issues)
+    // Build base URL for pagination links
+    const buildUrl = (newPage) => {
+      const params = new URLSearchParams()
+      params.set('order_by', orderBy)
+      params.set('sort', sort)
+      params.set('page', newPage.toString())
+      params.set('per_page', perPage.toString())
+      if (state !== 'all') params.set('state', state)
+      if (req.query.mock === 'true') params.set('mock', 'true')
+      return `/issues/?${params.toString()}`
+    }
+
+    // Use mock data if ?mock=true query parameter is present
+    if (req.query.mock === 'true') {
+      // Apply state filter to mock data
+      const filteredIssues = state === 'all'
+        ? [...mockIssues]
+        : mockIssues.filter(i => i.state === state)
+
+      // Apply sorting to mock data
+      const sortedIssues = filteredIssues.sort((a, b) => {
+        let aVal, bVal
+        if (orderBy === 'title') {
+          aVal = a.title.toLowerCase()
+          bVal = b.title.toLowerCase()
+        } else {
+          aVal = new Date(a[orderBy])
+          bVal = new Date(b[orderBy])
+        }
+        if (sort === 'asc') return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+      })
+
+      // Apply pagination to mock data
+      const total = sortedIssues.length
+      const totalPages = Math.ceil(total / perPage)
+      const start = (page - 1) * perPage
+      const paginatedIssues = sortedIssues.slice(start, start + perPage)
+
+      // Format dates
+      paginatedIssues.forEach(i => {
+        i.created_at_formatted = formatDate(i.created_at)
+        i.updated_at_formatted = formatDate(i.updated_at)
+      })
+
+      return res.render('pages/issues-explorer', {
+        css: '/css/issues-explorer.css',
+        issues: paginatedIssues,
+        mock: true,
+        pagination: { page, perPage, total, totalPages },
+        sorting: { orderBy, sort },
+        activeFilter: state,
+        buildUrl
+      })
+    }
+
+    const { issues, pagination } = await gitlabApi.getIssues({ state: state !== 'all' ? state : undefined, orderBy, sort, page, perPage })
+
+    if (!issues) {
+      throw new AppError('Failed to fetch issues from GitLab', 502)
+    }
 
     issues.forEach(i => {
-      i.created_at = formatDate(i.created_at)
+      i.created_at_formatted = formatDate(i.created_at)
+      i.updated_at_formatted = formatDate(i.updated_at)
     })
 
     res.render('pages/issues-explorer', {
       css: '/css/issues-explorer.css',
-      issues
+      issues,
+      pagination,
+      sorting: { orderBy, sort },
+      activeFilter: state,
+      buildUrl
     })
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
@@ -50,150 +116,138 @@ const expandIssue = async (req, res, next) => {
   try {
     const iid = req.params.iid
 
-    const issueUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}`
-    const issueConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
+    // Use mock data if ?mock=true query parameter is present
+    if (req.query.mock === 'true') {
+      const issue = mockIssues.find(i => i.iid === parseInt(iid))
+      const comments = mockComments[iid] || []
+      return res.render('pages/expanded-issue', {
+        css: '/css/expanded-issue.css',
+        issue: issue || null,
+        comments: comments,
+        mock: true
+      })
     }
-    const issue = await getRequest(issueUrl, issueConfig)
+
+    const issue = await gitlabApi.getIssue(iid)
+
+    if (!issue) {
+      throw new AppError('Issue not found', 404)
+    }
+
     issue.created_at = formatDate(issue.created_at)
 
-    const commentsUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}/notes`
-    const commentsConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
+    const comments = await gitlabApi.getNotes(iid)
+    if (comments) {
+      comments.reverse()
+      comments.forEach(c => {
+        c.created_at = formatDate(c.created_at)
+      })
     }
-
-    const comments = await getRequest(commentsUrl, commentsConfig)
-    comments.reverse()
-
-    comments.forEach(c => {
-      c.created_at = formatDate(c.created_at)
-    })
 
     res.render('pages/expanded-issue', {
       css: '/css/expanded-issue.css',
-      issue: issue || null,
+      issue,
       comments: comments || []
     })
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
 // Updates the status of the issue (reopen or close)
 const updateIssueStatus = async (req, res, next) => {
-  const iid = req.params.iid
-
   try {
-    const updateStatusUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}`
-    const updateStatusData = { state_event: req.body.state_event }
-    const updateStatusConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
-    }
-
-    await putRequest(updateStatusUrl, updateStatusData, updateStatusConfig)
+    const iid = req.params.iid
+    await gitlabApi.updateIssue(iid, { state_event: req.body.state_event })
+    res.json({ success: true })
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 }
 
 // Adds a new comment for a particular issue
 const addIssueComment = async (req, res, next) => {
-  const iid = req.params.iid
-
   try {
-    const newCommentUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}/notes`
-    const newCommentData = { body: req.body.comment }
-    const newCommentConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
-    }
-
-    await postRequest(newCommentUrl, newCommentData, newCommentConfig)
+    const iid = req.params.iid
+    await gitlabApi.addNote(iid, req.body.comment)
+    res.json({ success: true })
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
 // Renders the issue creation webpage
-const renderIssueCreation = async (req, res, next) => {
+const renderIssueCreation = async (req, res, _next) => {
   res.render('pages/issue-creation', {
-    css: '/css/issue-creation.css'
+    css: '/css/issue-creation.css',
+    mock: req.query.mock === 'true' ? true : undefined
   })
 }
 
 // Creates a particular issue to be posted on Gitlab
 const createIssue = async (req, res, next) => {
   try {
-    const createIssueUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/`
-    const createIssueData = {
+    await gitlabApi.createIssue({
       title: req.body.title,
       description: req.body.description
-    }
-    const createIssueConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
-    }
-
-    await postRequest(createIssueUrl, createIssueData, createIssueConfig)
+    })
 
     res.redirect('/issues/create')
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
 // Renders the issue editing webpage
 const renderIssueEdit = async (req, res, next) => {
-  const iid = req.params.iid
-
   try {
-    const issueUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}`
-    const issueConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
+    const iid = req.params.iid
+    const issue = await gitlabApi.getIssue(iid)
+
+    if (!issue) {
+      throw new AppError('Issue not found', 404)
     }
-    const issue = await getRequest(issueUrl, issueConfig)
 
     res.render('pages/issue-edit', {
       css: '/css/issue-creation.css',
-      issue: issue || null
+      issue
     })
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
 // Edits a particular issue and updates on Gitlab using PUT method
 const editIssue = async (req, res, next) => {
-  const iid = req.params.iid
   try {
-    const editIssueUrl = `${process.env.GITLAB_BASE_URL}/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/issues/${iid}`
-
-    const editIssueData = {
+    const iid = req.params.iid
+    await gitlabApi.updateIssue(iid, {
       title: req.body.title,
       description: req.body.description
-    }
-    const editIssueConfig = {
-      headers: {
-        Authorization: `Bearer ${process.env.GITLAB_API_TOKEN}`
-      }
-    }
-
-    await putRequest(editIssueUrl, editIssueData, editIssueConfig)
+    })
 
     res.redirect('/issues')
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
-export { fetchExplorerIssues, expandIssue, updateIssueStatus, addIssueComment, renderIssueCreation, createIssue, renderIssueEdit, editIssue }
+// Renders the repository information page
+const renderRepository = async (req, res, next) => {
+  try {
+    const project = await gitlabApi.getProject()
+
+    if (!project) {
+      throw new AppError('Failed to fetch project information', 502)
+    }
+
+    res.render('pages/repository', {
+      css: '/css/repository.css',
+      project
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export { fetchExplorerIssues, expandIssue, updateIssueStatus, addIssueComment, renderIssueCreation, createIssue, renderIssueEdit, editIssue, renderRepository }
